@@ -1,16 +1,31 @@
-# DOM to SVG
+<h1 align="center">dom2svg</h1>
 
-[![npm](https://img.shields.io/npm/v/dom2svg)](https://www.npmjs.com/package/dom2svg)
-[![CI status](https://github.com/felixfbecker/dom2svg/workflows/test/badge.svg?branch=main)](https://github.com/felixfbecker/dom2svg/actions)
-![license: MIT](https://img.shields.io/npm/l/dom2svg)
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+<p align="center">
+  <a href="https://www.npmjs.com/package/dom2svg">
+    <img src="https://img.shields.io/npm/v/dom2svg.svg" alt="Version">
+  </a>
+  <a href="https://www.npmjs.com/package/dom2svg">
+    <img src="https://img.shields.io/npm/dm/dom2svg" alt="Downloads">
+  </a>
+  <a href="https://github.com/xiashui1994/dom2svg/issues">
+    <img src="https://img.shields.io/github/issues/xiashui1994/dom2svg" alt="Issues">
+  </a>
+  <a href="https://github.com/xiashui1994/dom2svg/blob/main/LICENSE">
+    <img src="https://img.shields.io/npm/l/dom2svg.svg" alt="License">
+  </a>
+</p>
 
-Library to convert a given HTML DOM node into an accessible SVG "screenshot".
+<p align="center">Library to convert a given HTML DOM node into an accessible SVG "screenshot".</p>
 
-## Demo 📸
+<p align="center">Fork from <a href="https://github.com/felixfbecker/dom-to-svg">dom-to-svg</a></p>
 
-Try out the [SVG Screenshots Chrome extension](https://chrome.google.com/webstore/detail/svg-screenshot/nfakpcpmhhilkdpphcjgnokknpbpdllg) which uses this library to allow you to take SVG screenshots of any webpage.
-You can find the source code at [github.com/felixfbecker/svg-screenshots](https://github.com/felixfbecker/svg-screenshots).
+<p align="center">English | <a href="README.zh-CN.md">简体中文</a></p>
+
+## Install
+
+```sh
+pnpm/npm/yarn i dom2svg
+```
 
 ## Usage
 
