@@ -1,5 +1,5 @@
 import './style.css'
-import { elementToSVG } from '../lib/index'
+import { elementToSVG, inlineResources } from '../lib/index'
 import typescriptLogo from './typescript.svg'
 import viteLogo from './vite.svg'
 
@@ -19,9 +19,17 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   </div>
 `
 
-document.querySelector('#export')?.addEventListener('click', () => {
+document.querySelector('#export')?.addEventListener('click', async () => {
   const svg = elementToSVG(document.querySelector('body')!)
-  const svgString = new XMLSerializer().serializeToString(svg)
+  const svgRootElement = svg.documentElement
+  document.querySelector('body')!.prepend(svgRootElement)
+  try {
+    await inlineResources(svgRootElement)
+  }
+  finally {
+    svgRootElement.remove()
+  }
+  const svgString = new XMLSerializer().serializeToString(svgRootElement)
   const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' })
   window.open(URL.createObjectURL(blob))
 })

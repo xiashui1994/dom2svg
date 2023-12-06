@@ -30,7 +30,7 @@ pnpm/npm/yarn i dom2svg
 ## 使用
 
 ```js
-import { documentToSVG, elementToSVG, inlineResources, formatXML } from 'dom2svg'
+import { documentToSVG, elementToSVG, formatXML, inlineResources } from 'dom2svg'
 
 // 捕获整个文档
 const svgDocument = documentToSVG(document)
