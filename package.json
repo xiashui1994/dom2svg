@@ -1,0 +1,56 @@
+{
+  "name": "dom2svg",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Take SVG screenshots of DOM elements",
+  "author": "xiashui",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xiashui1994/dom2svg"
+  },
+  "keywords": [
+    "svg",
+    "dom",
+    "screenshot",
+    "snapshot",
+    "document",
+    "element",
+    "image"
+  ],
+  "exports": {
+    "types": "./index.d.ts",
+    "require": "./dist/dom2svg.umd.cjs",
+    "import": "./dist/dom2svg.js"
+  },
+  "main": "./dist/dom2svg.umd.cjs",
+  "module": "./dist/dom2svg.js",
+  "types": "./index.d.ts",
+  "files": [
+    "dist",
+    "index.d.ts"
+  ],
+  "scripts": {
+    "prepare": "husky install",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "gradient-parser": "^1.0.2",
+    "postcss": "^8.3.5",
+    "postcss-value-parser": "^4.1.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^0.38.4",
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "eslint": "^8.38.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.1",
+    "typescript": "^4.9.4",
+    "vite": "^5.0.5",
+    "vite-plugin-dts": "^3.6.4"
+  }
+}
