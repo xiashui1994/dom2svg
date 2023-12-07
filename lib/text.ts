@@ -30,6 +30,9 @@ export function handleTextNode(textNode: Text, context: TraversalContext): void 
   // Make sure the y attribute is the bottom of the box, not the baseline
   svgTextElement.setAttribute('dominant-baseline', 'text-after-edge')
 
+  // Remove leading and trailing whitespace
+  textNode.textContent = textNode.textContent!.trim()
+
   const lineRange = textNode.ownerDocument.createRange()
   lineRange.setStart(textNode, 0)
   lineRange.setEnd(textNode, 0)

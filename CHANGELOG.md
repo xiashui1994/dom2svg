@@ -1,15 +1,22 @@
+## 1.0.3 - 2023-12-07
+
+### Bug Fixes
+
+* Remove leading and trailing whitespace
+
+
 ## 1.0.2 - 2023-12-06
 
 ### Bug Fixes
 
-* use xlink:href additionally to href in img
+* Use xlink:href additionally to href in img
 
 
 ## 1.0.1 - 2023-12-06
 
 ### Features
 
-* Update document
+* Update README
 
 
 ## 1.0.0 - 2023-12-06
@@ -20,4 +27,4 @@
 
 ### Bug Fixes
 
-* Safari returns 2 DOMRects when wrapping text.
+* Safari returns 2 DOMRects when wrapping text
