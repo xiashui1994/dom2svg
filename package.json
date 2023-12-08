@@ -34,6 +34,7 @@
     "prepare": "husky install",
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:example": "vite build --config vite.config.example.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
