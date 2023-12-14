@@ -19,23 +19,23 @@ export function isTransparent(color: string): boolean {
 }
 
 export function hasUniformBorder(styles: CSSStyleDeclaration): boolean {
-  return parseFloat(styles.borderTopWidth) !== 0
-  && styles.borderTopStyle !== 'none'
-  && styles.borderTopStyle !== 'inset'
-  && styles.borderTopStyle !== 'outset'
-  && !isTransparent(styles.borderTopColor)
+  return Number.parseFloat(styles.borderTopWidth) !== 0
+    && styles.borderTopStyle !== 'none'
+    && styles.borderTopStyle !== 'inset'
+    && styles.borderTopStyle !== 'outset'
+    && !isTransparent(styles.borderTopColor)
   // Cannot use border property directly as in Firefox those are empty strings.
   // Need to get the specific border properties from the specific sides.
   // https://stackoverflow.com/questions/41696063/getcomputedstyle-returns-empty-strings-on-ff-when-instead-crome-returns-a-comp
-  && styles.borderTopWidth === styles.borderLeftWidth
-  && styles.borderTopWidth === styles.borderRightWidth
-  && styles.borderTopWidth === styles.borderBottomWidth
-  && styles.borderTopColor === styles.borderLeftColor
-  && styles.borderTopColor === styles.borderRightColor
-  && styles.borderTopColor === styles.borderBottomColor
-  && styles.borderTopStyle === styles.borderLeftStyle
-  && styles.borderTopStyle === styles.borderRightStyle
-  && styles.borderTopStyle === styles.borderBottomStyle
+    && styles.borderTopWidth === styles.borderLeftWidth
+    && styles.borderTopWidth === styles.borderRightWidth
+    && styles.borderTopWidth === styles.borderBottomWidth
+    && styles.borderTopColor === styles.borderLeftColor
+    && styles.borderTopColor === styles.borderRightColor
+    && styles.borderTopColor === styles.borderBottomColor
+    && styles.borderTopStyle === styles.borderLeftStyle
+    && styles.borderTopStyle === styles.borderRightStyle
+    && styles.borderTopStyle === styles.borderBottomStyle
 }
 
 /** A side of a box. */
@@ -114,17 +114,17 @@ export function calculateOverlappingCurvesFactor(styles: CSSStyleDeclaration, bo
 
 export function isVisible(styles: CSSStyleDeclaration): boolean {
   return styles.displayOutside !== 'none'
-  && styles.display !== 'none'
-  && styles.visibility !== 'hidden'
-  && styles.opacity !== '0'
+    && styles.display !== 'none'
+    && styles.visibility !== 'hidden'
+    && styles.opacity !== '0'
 }
 
 export function parseCSSLength(length: string, containerLength: number): number | undefined {
   if (length.endsWith('px'))
-    return parseFloat(length)
+    return Number.parseFloat(length)
 
   if (length.endsWith('%'))
-    return (parseFloat(length) / 100) * containerLength
+    return (Number.parseFloat(length) / 100) * containerLength
 
   return undefined
 }
@@ -132,7 +132,7 @@ export function parseCSSLength(length: string, containerLength: number): number 
 export function unescapeStringValue(value: string): string {
   return value
   // Replace hex escape sequences
-    .replace(/\\([\da-f]{1,2})/gi, (_substring, codePoint) => String.fromCodePoint(parseInt(codePoint, 16)))
+    .replace(/\\([\da-f]{1,2})/gi, (_substring, codePoint) => String.fromCodePoint(Number.parseInt(codePoint, 16)))
   // Replace all other escapes (quotes, backslash, etc)
     .replace(/\\(.)/g, '$1')
 }

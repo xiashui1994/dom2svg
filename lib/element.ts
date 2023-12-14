@@ -305,9 +305,9 @@ function addBackgroundAndBorders(
             if (
               backgroundRepeat === 'no-repeat'
               || (backgroundPositionX === 0
-                && backgroundPositionY === 0
-                && backgroundWidth === bounds.width
-                && backgroundHeight === bounds.height)
+              && backgroundPositionY === 0
+              && backgroundWidth === bounds.width
+              && backgroundHeight === bounds.height)
             ) {
               image.setAttribute('x', bounds.x.toString())
               image.setAttribute('y', bounds.y.toString())
@@ -460,9 +460,9 @@ function createBorder(
     if (!match)
       throw new Error(`Unexpected color: ${color}`)
 
-    const components = match.slice(1, 4).map(value => parseInt(value, 10) * 0.3)
+    const components = match.slice(1, 4).map(value => Number.parseInt(value, 10) * 0.3)
     if (match[4])
-      components.push(parseFloat(match[4]))
+      components.push(Number.parseFloat(match[4]))
 
     // Low-light border
     // https://stackoverflow.com/questions/4147940/how-do-browsers-determine-which-exact-colors-to-use-for-border-inset-or-outset

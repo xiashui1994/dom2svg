@@ -26,8 +26,7 @@ export async function inlineResources(element: Element): Promise<void> {
         const elementHref = element.getAttribute('href') || element.getAttribute('xlink:href')
         assert(elementHref, 'Expected <image> element to have an href or xlink:href attribute')
         const blob = await withTimeout(10000, `Timeout fetching ${elementHref}`, () =>
-          fetchResource(elementHref),
-        )
+          fetchResource(elementHref))
         if (blob.type === 'image/svg+xml') {
           // If the image is an SVG, inline it into the output SVG.
           // Some tools (e.g. Figma) do not support nested SVG.

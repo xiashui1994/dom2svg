@@ -43,9 +43,9 @@ export function establishesStackingContext(
     || styles.position === 'fixed'
     || styles.position === 'sticky'
     || (parentStyles
-      && (parentStyles.display === 'flex' || parentStyles.display === 'grid')
-      && styles.zIndex !== 'auto')
-    || parseFloat(styles.opacity) !== 1
+    && (parentStyles.display === 'flex' || parentStyles.display === 'grid')
+    && styles.zIndex !== 'auto')
+    || Number.parseFloat(styles.opacity) !== 1
     || styles.mixBlendMode !== 'normal'
     || styles.transform !== 'none'
     || styles.filter !== 'none'
@@ -140,7 +140,7 @@ export function determineStackingLayer(
   // https://www.w3.org/TR/CSS22/zindex.html
 
   // Note: the root element is not handled here, but in handleElement().
-  const zIndex = styles.zIndex !== 'auto' ? parseInt(styles.zIndex, 10) : undefined
+  const zIndex = styles.zIndex !== 'auto' ? Number.parseInt(styles.zIndex, 10) : undefined
   if (zIndex !== undefined && zIndex < 0 && establishesStackingContext(styles, parentStyles))
     return 'childStackingContextsWithNegativeStackLevels'
 
@@ -170,7 +170,7 @@ export function sortChildrenByZIndex(parent: SVGElement): void {
       // E.g. a <clipPath>
       return 0
     }
-    return parseInt(zIndexA, 10) - parseInt(zIndexB, 10)
+    return Number.parseInt(zIndexA, 10) - Number.parseInt(zIndexB, 10)
   })
   for (const child of sorted)
     parent.append(child)
