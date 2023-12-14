@@ -30,6 +30,9 @@
     "dist",
     "index.d.ts"
   ],
+  "engines": {
+    "node": "^18.0.0 || >=20.0.0"
+  },
   "scripts": {
     "prepare": "husky install",
     "dev": "vite",
