@@ -20,8 +20,8 @@
   ],
   "exports": {
     "types": "./index.d.ts",
-    "require": "./dist/dom2svg.umd.cjs",
-    "import": "./dist/dom2svg.js"
+    "import": "./dist/dom2svg.js",
+    "require": "./dist/dom2svg.umd.cjs"
   },
   "main": "./dist/dom2svg.umd.cjs",
   "module": "./dist/dom2svg.js",
@@ -40,18 +40,18 @@
   },
   "dependencies": {
     "gradient-parser": "^1.0.2",
-    "postcss": "^8.3.5",
-    "postcss-value-parser": "^4.1.0"
+    "postcss": "^8.4.32",
+    "postcss-value-parser": "^4.2.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.38.4",
+    "@antfu/eslint-config": "^2.4.5",
     "@commitlint/cli": "^18.4.3",
     "@commitlint/config-conventional": "^18.4.3",
-    "eslint": "^8.38.0",
+    "eslint": "^8.55.0",
     "husky": "^8.0.3",
-    "lint-staged": "^13.2.1",
-    "typescript": "^4.9.4",
-    "vite": "^5.0.5",
+    "lint-staged": "^15.2.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.8",
     "vite-plugin-dts": "^3.6.4"
   }
 }
