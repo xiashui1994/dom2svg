@@ -1,3 +1,11 @@
+## 1.0.4 - 2023-12-28
+
+### Features
+
+* export fetchResource blobToDataURL
+* update devDependencies
+
+
 ## 1.0.3 - 2023-12-07
 
 ### Bug Fixes
