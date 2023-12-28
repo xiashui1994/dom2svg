@@ -88,4 +88,4 @@ export function elementToSVG(element: Element, options?: DomToSvgOptions): XMLDo
   return svgDocument
 }
 
-export { inlineResources } from './inline'
+export { inlineResources, fetchResource, blobToDataURL } from './inline'

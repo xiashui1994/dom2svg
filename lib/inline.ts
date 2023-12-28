@@ -137,7 +137,7 @@ async function inlineCssFontUrlArgumentNode(
   }
 }
 
-async function fetchResource(url: string): Promise<Blob> {
+export async function fetchResource(url: string): Promise<Blob> {
   assert(url, 'No URL passed')
   const headers = new Headers()
   const response = await fetch(url, { headers })
@@ -148,7 +148,7 @@ async function fetchResource(url: string): Promise<Blob> {
   return blob
 }
 
-async function blobToDataURL(blob: Blob): Promise<URL> {
+export async function blobToDataURL(blob: Blob): Promise<URL> {
   const reader = new FileReader()
   await new Promise<void>((resolve, reject) => {
     reader.addEventListener('error', () => reject(new Error('Error loading resource with FileLoader')))
