@@ -1,3 +1,10 @@
+## 1.0.5 - 2024-04-09
+
+### Features
+
+* update dependencies and devDependencies
+
+
 ## 1.0.4 - 2023-12-28
 
 ### Features
