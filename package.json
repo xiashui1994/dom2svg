@@ -19,17 +19,14 @@
     "image"
   ],
   "exports": {
-    "types": "./index.d.ts",
+    "types": "./dist/index.d.ts",
     "import": "./dist/dom2svg.js",
     "require": "./dist/dom2svg.umd.cjs"
   },
   "main": "./dist/dom2svg.umd.cjs",
   "module": "./dist/dom2svg.js",
-  "types": "./index.d.ts",
-  "files": [
-    "dist",
-    "index.d.ts"
-  ],
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
   "engines": {
     "node": "^18.0.0 || >=20.0.0"
   },
@@ -43,18 +40,18 @@
   },
   "dependencies": {
     "gradient-parser": "^1.0.2",
-    "postcss": "^8.4.32",
+    "postcss": "^8.4.38",
     "postcss-value-parser": "^4.2.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.4.5",
-    "@commitlint/cli": "^18.4.3",
-    "@commitlint/config-conventional": "^18.4.3",
-    "eslint": "^8.55.0",
-    "husky": "^8.0.3",
-    "lint-staged": "^15.2.0",
-    "typescript": "^5.3.3",
-    "vite": "^5.0.8",
-    "vite-plugin-dts": "^3.6.4"
+    "@antfu/eslint-config": "^2.12.2",
+    "@commitlint/cli": "^19.2.1",
+    "@commitlint/config-conventional": "^19.1.0",
+    "eslint": "^9.0.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "typescript": "^5.4.4",
+    "vite": "^5.2.8",
+    "vite-plugin-dts": "^3.8.1"
   }
 }
