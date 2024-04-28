@@ -1,3 +1,10 @@
+## 1.0.6 - 2024-04-28
+
+### Features
+
+* fetch options
+
+
 ## 1.0.5 - 2024-04-09
 
 ### Features

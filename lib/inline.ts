@@ -18,15 +18,15 @@ declare global {
  * Images that reference another SVG are inlined by inlining the embedded SVG into the output SVG.
  * Note: The passed element needs to be attached to a document with a window (`defaultView`) for this so that `getComputedStyle()` can be used.
  */
-export async function inlineResources(element: Element): Promise<void> {
+export async function inlineResources(element: Element, fetchOptions?: RequestInit): Promise<void> {
   await Promise.all([
-    ...[...element.children].map(inlineResources),
+    ...[...element.children].map(child => inlineResources(child, fetchOptions)),
     (async () => {
       if (isSVGImageElement(element)) {
         const elementHref = element.getAttribute('href') || element.getAttribute('xlink:href')
         assert(elementHref, 'Expected <image> element to have an href or xlink:href attribute')
         const blob = await withTimeout(10000, `Timeout fetching ${elementHref}`, () =>
-          fetchResource(elementHref))
+          fetchResource(elementHref, fetchOptions))
         if (blob.type === 'image/svg+xml') {
           // If the image is an SVG, inline it into the output SVG.
           // Some tools (e.g. Figma) do not support nested SVG.
@@ -137,10 +137,10 @@ async function inlineCssFontUrlArgumentNode(
   }
 }
 
-export async function fetchResource(url: string): Promise<Blob> {
+export async function fetchResource(url: string, options?: RequestInit): Promise<Blob> {
   assert(url, 'No URL passed')
   const headers = new Headers()
-  const response = await fetch(url, { headers })
+  const response = await fetch(url, { headers, ...options })
   if (!response.ok)
     throw new Error(response.statusText)
 
