@@ -1,7 +1,7 @@
 {
   "name": "dom2svg",
   "type": "module",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Take SVG screenshots of DOM elements",
   "author": "xiashui",
   "license": "MIT",

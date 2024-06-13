@@ -1,3 +1,10 @@
+## 1.0.7 - 2024-06-13
+
+### Bug Fixes
+
+* Support for application/octet-stream
+
+
 ## 1.0.6 - 2024-04-28
 
 ### Features
