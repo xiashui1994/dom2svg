@@ -204,45 +204,16 @@ const graphicalPresentationAttributes = [
   'visibility',
 ] as const
 
-const defaults: Record<typeof graphicalPresentationAttributes[number], string> = {
-  'alignment-baseline': 'auto',
-  'baseline-shift': '0px',
-  'clip-path': 'none',
-  'clip-rule': 'nonzero',
-  'color-interpolation-filters': 'linearrgb',
-  'color-interpolation': 'srgb',
-  'color-rendering': 'auto',
-  'fill-opacity': '1',
-  'fill-rule': 'nonzero',
-  'flood-color': 'rgb(0, 0, 0)',
-  'flood-opacity': '1',
-  'image-rendering': 'auto',
-  'lighting-color': 'rgb(255, 255, 255)',
-  'marker-end': 'none',
-  'marker-mid': 'none',
-  'marker-start': 'none',
-  'pointer-events': 'auto',
-  'shape-rendering': 'auto',
-  'stop-color': 'rgb(0, 0, 0)',
-  'stop-opacity': '1',
-  'stroke-dasharray': 'none',
-  'stroke-dashoffset': '0px',
-  'stroke-linecap': 'butt',
-  'stroke-linejoin': 'miter',
-  'stroke-miterlimit': '4',
-  'stroke-opacity': '1',
-  'stroke-width': '1px',
-  'vector-effect': 'none',
-  'color': '',
-  'direction': 'ltr',
-  'fill': '',
-  'filter': 'none',
-  'mask': 'none',
-  'opacity': '1',
-  'stroke': '',
-  'transform': 'none',
-  'visibility': 'visible',
-}
+const defaults = ((): Record<typeof graphicalPresentationAttributes[number], string> => {
+  const defaults: Record<string, string> = {}
+  const element = document.createElementNS(svgNamespace, 'svg')
+  document.body.appendChild(element)
+  element.style.all = 'initial'
+  for (const attribute of graphicalPresentationAttributes)
+    defaults[attribute] = window.getComputedStyle(element).getPropertyValue(attribute)
+  document.body.removeChild(element)
+  return defaults
+})()
 
 /**
  * Prefixes all ID references of the form `url(#id)` in the given string.
