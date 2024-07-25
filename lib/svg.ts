@@ -250,3 +250,16 @@ function copyGraphicalPresentationAttributes(
     }
   }
 }
+
+/**
+ * Embed SVG, don't traverse contents
+ */
+export function embedSvg(element: SVGElement, bounds: DOMRect, styles: CSSStyleDeclaration, elementToAppendTo: SVGElement): void {
+  const clonedSvg = element.cloneNode(true) as SVGSVGElement
+  clonedSvg.setAttribute('x', bounds.x.toString())
+  clonedSvg.setAttribute('y', bounds.y.toString())
+  clonedSvg.setAttribute('width', bounds.width.toString())
+  clonedSvg.setAttribute('height', bounds.height.toString())
+  clonedSvg.style.color = styles.color // handle fill or stroke referencing currentColor keyword
+  elementToAppendTo.append(clonedSvg)
+}

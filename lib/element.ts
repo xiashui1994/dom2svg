@@ -29,7 +29,7 @@ import {
   establishesStackingContext,
   sortStackingLayerChildren,
 } from './stacking'
-import { handleSvgNode } from './svg'
+import { embedSvg, handleSvgNode } from './svg'
 import { copyTextStyles } from './text'
 import type { TraversalContext } from './traversal'
 import { walkNode } from './traversal'
@@ -234,7 +234,9 @@ export function handleElement(element: Element, context: Readonly<TraversalConte
       }
     }
     else if (rectanglesIntersect && isSVGSVGElement(element) && isVisible(styles)) {
-      handleSvgNode(element, { ...childContext, idPrefix: `${id}-` })
+      context.options?.inlineSvg
+        ? handleSvgNode(element, { ...childContext, idPrefix: `${id}-` })
+        : embedSvg(element, bounds, styles, elementToAppendTo)
     }
     else {
       // Walk children even if rectangles don't intersect,

@@ -16,6 +16,13 @@ export interface DomToSvgOptions {
    * @default true
    */
   keepLinks?: boolean
+
+  /**
+   * Whether to inline SVG elements into the SVG.
+   *
+   * @default true
+   */
+  inlineSvg?: boolean
 }
 
 export interface TraversalContext {

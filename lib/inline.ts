@@ -57,6 +57,7 @@ export async function inlineResources(element: Element, fetchOptions?: RequestIn
               options: {
                 // SVGs embedded through <img> are never interactive.
                 keepLinks: false,
+                inlineSvg: true,
                 captureArea: svgRoot.viewBox.baseVal,
               },
             })
