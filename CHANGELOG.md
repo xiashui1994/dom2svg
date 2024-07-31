@@ -1,3 +1,14 @@
+## 1.0.8 - 2024-07-31
+
+### Features
+
+* Support inlineSvg options
+
+### Bug Fixes
+
+* Modify the default values of SVG
+
+
 ## 1.0.7 - 2024-06-13
 
 ### Bug Fixes
