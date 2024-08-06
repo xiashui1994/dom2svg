@@ -123,9 +123,7 @@ export const textAttributes = new Set([
   'font-weight',
   'direction',
   'letter-spacing',
-  'text-decoration',
   'text-anchor',
-  'text-decoration',
   'text-rendering',
   'unicode-bidi',
   'word-spacing',
@@ -140,4 +138,6 @@ export function copyTextStyles(styles: CSSStyleDeclaration, svgElement: SVGEleme
   }
   // tspan uses fill, CSS uses color
   svgElement.setAttribute('fill', styles.color)
+  // text-decoration
+  svgElement.setAttribute('text-decoration', styles.textDecorationLine)
 }
