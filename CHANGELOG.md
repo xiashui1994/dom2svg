@@ -1,3 +1,10 @@
+## 1.0.9 - 2024-08-06
+
+### Bug Fixes
+
+* Fix text-decoration
+
+
 ## 1.0.8 - 2024-07-31
 
 ### Features
