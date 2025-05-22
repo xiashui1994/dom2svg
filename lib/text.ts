@@ -96,8 +96,13 @@ export function handleTextNode(textNode: Text, context: TraversalContext): void 
       return
     }
     // If two (unique) lines
-    // For some reason, Chrome returns 2 identical DOMRects for text with text-overflow: ellipsis.
-    if (lineRectangles[1] && lineRectangles[0].top !== lineRectangles[1].top) {
+    // Handle line breaks more explicitly for cross-browser compatibility
+    // Check both top position difference and computed style white-space
+    if (lineRectangles[1] && (
+      lineRectangles[0].top !== lineRectangles[1].top
+      || styles.whiteSpace === 'pre-wrap'
+      || styles.wordBreak === 'break-all'
+    )) {
       // Crossed a line break.
       // Go back one character to select exactly the previous line.
       lineRange.setEnd(textNode, lineRange.endOffset - 1)
