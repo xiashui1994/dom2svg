@@ -495,6 +495,13 @@ function createBorder(
     border.setAttribute('y1', bounds.bottom.toString())
     border.setAttribute('y2', bounds.bottom.toString())
   }
+
+  if (borderStyle === 'dashed') {
+    const width = Number.parseFloat(styles.getPropertyValue(`border-${side}-width`))
+    const dashLength = Math.max(width * 3, 3)
+    border.setAttribute('stroke-dasharray', `${dashLength},${dashLength}`)
+  }
+
   return border
 }
 
