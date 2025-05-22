@@ -1,3 +1,11 @@
+## 1.0.10 - 2025-05-22
+
+### Bug Fixes
+
+* Fix newline
+* Fix dashed
+
+
 ## 1.0.9 - 2024-08-06
 
 ### Bug Fixes
