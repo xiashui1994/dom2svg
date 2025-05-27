@@ -1,3 +1,10 @@
+## 1.0.11 - 2025-05-27
+
+### Bug Fixes
+
+* Fix img visibility
+
+
 ## 1.0.10 - 2025-05-22
 
 ### Bug Fixes
