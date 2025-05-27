@@ -197,6 +197,7 @@ export function handleElement(element: Element, context: Readonly<TraversalConte
       && isHTMLImageElement(element)
       // Make sure the element has a src/srcset attribute (the relative URL). `element.src` is absolute and always defined.
       && (element.getAttribute('src') || element.getAttribute('srcset'))
+      && isVisible(styles)
     ) {
       const svgImage = context.svgDocument.createElementNS(svgNamespace, 'image')
       svgImage.id = `${id}-image` // read by inlineResources()
