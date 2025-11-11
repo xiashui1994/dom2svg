@@ -142,7 +142,9 @@ export function copyTextStyles(styles: CSSStyleDeclaration, svgElement: SVGEleme
       svgElement.setAttribute(textProperty, value)
   }
   // tspan uses fill, CSS uses color
-  svgElement.setAttribute('fill', styles.color)
+  // Only set fill from computed color if the element doesn't already have a fill attribute
+  if (!svgElement.hasAttribute('fill'))
+    svgElement.setAttribute('fill', styles.color)
   // text-decoration
   svgElement.setAttribute('text-decoration', styles.textDecorationLine)
 }
