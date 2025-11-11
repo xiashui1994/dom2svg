@@ -235,9 +235,10 @@ export function handleElement(element: Element, context: Readonly<TraversalConte
       }
     }
     else if (rectanglesIntersect && isSVGSVGElement(element) && isVisible(styles)) {
-      context.options?.inlineSvg
-        ? handleSvgNode(element, { ...childContext, idPrefix: `${id}-` })
-        : embedSvg(element, bounds, styles, elementToAppendTo)
+      if (context.options?.inlineSvg)
+        handleSvgNode(element, { ...childContext, idPrefix: `${id}-` })
+      else
+        embedSvg(element, bounds, styles, elementToAppendTo)
     }
     else {
       // Walk children even if rectangles don't intersect,
@@ -308,9 +309,9 @@ function addBackgroundAndBorders(
             if (
               backgroundRepeat === 'no-repeat'
               || (backgroundPositionX === 0
-              && backgroundPositionY === 0
-              && backgroundWidth === bounds.width
-              && backgroundHeight === bounds.height)
+                && backgroundPositionY === 0
+                && backgroundWidth === bounds.width
+                && backgroundHeight === bounds.height)
             ) {
               image.setAttribute('x', bounds.x.toString())
               image.setAttribute('y', bounds.y.toString())
@@ -344,7 +345,7 @@ function addBackgroundAndBorders(
               box.setAttribute('fill', `url(#${pattern.id})`)
             }
           }
-          else if (/^(-webkit-)?linear-gradient$/.test(backgroundNode.value)) {
+          else if (/^(?:-webkit-)?linear-gradient$/.test(backgroundNode.value)) {
             const linearGradientCss = cssValueParser.stringify(backgroundNode)
             const svgLinearGradient = convertLinearGradient(linearGradientCss, context)
             if (backgroundPositionX !== 0 || backgroundPositionY !== 0) {
@@ -385,7 +386,7 @@ function createBackgroundAndBorderBox(
   bounds: DOMRectReadOnly,
   styles: CSSStyleDeclaration,
   context: Pick<TraversalContext, 'svgDocument'>,
-): SVGRectElement {
+): SVGElement {
   const background = createBox(bounds, context)
 
   // TODO handle background image and other properties
@@ -407,16 +408,49 @@ function createBackgroundAndBorderBox(
   }
 
   // Set border radius
-  // Approximation, always assumes uniform border-radius by using the top-left horizontal radius and the top-left vertical radius for all corners.
-  // TODO support irregular border radii on all corners by drawing border as a <path>.
-  const overlappingCurvesFactor = calculateOverlappingCurvesFactor(styles, bounds)
-  const radiusX = getBorderRadiiForSide('top', styles, bounds)[0] * overlappingCurvesFactor
-  const radiusY = getBorderRadiiForSide('left', styles, bounds)[0] * overlappingCurvesFactor
-  if (radiusX !== 0)
-    background.setAttribute('rx', radiusX.toString())
+  const factor = calculateOverlappingCurvesFactor(styles, bounds)
 
-  if (radiusY !== 0)
-    background.setAttribute('ry', radiusY.toString())
+  // Calculate all 4 corners' radii from CSS
+  const topRadii = getBorderRadiiForSide('top', styles, bounds)
+  const bottomRadii = getBorderRadiiForSide('bottom', styles, bounds)
+  const leftRadii = getBorderRadiiForSide('left', styles, bounds)
+  const rightRadii = getBorderRadiiForSide('right', styles, bounds)
+
+  // Get radii for each corner (applying factor)
+  const topLeft = { x: topRadii[0] * factor, y: leftRadii[0] * factor }
+  const topRight = { x: topRadii[1] * factor, y: rightRadii[0] * factor }
+  const bottomRight = { x: bottomRadii[1] * factor, y: rightRadii[1] * factor }
+  const bottomLeft = { x: bottomRadii[0] * factor, y: leftRadii[1] * factor }
+
+  // Check if border-radius is uniform
+  const isUniform = (
+    topLeft.x === topRight.x
+    && topLeft.x === bottomRight.x
+    && topLeft.x === bottomLeft.x
+    && topLeft.y === topRight.y
+    && topLeft.y === bottomRight.y
+    && topLeft.y === bottomLeft.y
+  )
+
+  if (isUniform) {
+    // Uniform border-radius, use rx/ry attributes
+    background.setAttribute('rx', topLeft.x.toString())
+    background.setAttribute('ry', topLeft.y.toString())
+  }
+  else if (topLeft.x + topRight.x + bottomRight.x + bottomLeft.x > 0
+    || topLeft.y + topRight.y + bottomRight.y + bottomLeft.y > 0) {
+    // Irregular border-radius, use path
+    const path = context.svgDocument.createElementNS(svgNamespace, 'path')
+    path.setAttribute('d', createRoundedRectPath(bounds, topLeft, topRight, bottomRight, bottomLeft))
+
+    // Copy attributes
+    for (const attr of ['fill', 'stroke', 'stroke-width', 'stroke-dasharray'] as const) {
+      if (background.hasAttribute(attr))
+        path.setAttribute(attr, background.getAttribute(attr)!)
+    }
+
+    return path
+  }
 
   return background
 }
@@ -521,4 +555,43 @@ function createSvgAnchor(element: HTMLAnchorElement, context: Pick<TraversalCont
     svgAnchor.setAttribute('download', element.download)
 
   return svgAnchor
+}
+
+function createRoundedRectPath(
+  bounds: DOMRectReadOnly,
+  topLeft: { x: number, y: number },
+  topRight: { x: number, y: number },
+  bottomRight: { x: number, y: number },
+  bottomLeft: { x: number, y: number },
+): string {
+  const { x, y, width, height } = bounds
+
+  // Build path using SVG arc commands
+  let path = `M ${x + topLeft.x} ${y}`
+
+  // Top edge
+  path += ` H ${x + width - topRight.x}`
+  // Top-right corner (arc)
+  if (topRight.x || topRight.y)
+    path += ` A ${topRight.x} ${topRight.y} 0 0 1 ${x + width} ${y + topRight.y}`
+
+  // Right edge
+  path += ` V ${y + height - bottomRight.y}`
+  // Bottom-right corner (arc)
+  if (bottomRight.x || bottomRight.y)
+    path += ` A ${bottomRight.x} ${bottomRight.y} 0 0 1 ${x + width - bottomRight.x} ${y + height}`
+
+  // Bottom edge
+  path += ` H ${x + bottomLeft.x}`
+  // Bottom-left corner (arc)
+  if (bottomLeft.x || bottomLeft.y)
+    path += ` A ${bottomLeft.x} ${bottomLeft.y} 0 0 1 ${x} ${y + height - bottomLeft.y}`
+
+  // Left edge
+  path += ` V ${y + topLeft.y}`
+  // Top-left corner (arc)
+  if (topLeft.x || topLeft.y)
+    path += ` A ${topLeft.x} ${topLeft.y} 0 0 1 ${x + topLeft.x} ${y}`
+
+  return `${path} Z`
 }
