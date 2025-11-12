@@ -155,14 +155,13 @@ export function handleElement(element: Element, context: Readonly<TraversalConte
     if (rectanglesIntersect)
       addBackgroundAndBorders(styles, bounds, backgroundContainer, window, context)
 
-    // If element is overflow: hidden, create a masking rectangle to hide any overflowing content of any descendants.
+    // If element is overflow: hidden, create a masking element to hide any overflowing content of any descendants.
     // Use <mask> instead of <clipPath> as Figma supports <mask>, but not <clipPath>.
     if (styles.overflow !== 'visible') {
       const mask = context.svgDocument.createElementNS(svgNamespace, 'mask')
       mask.id = context.getUniqueId(`mask-for-${id}`)
-      const visibleRectangle = createBox(bounds, context)
-      visibleRectangle.setAttribute('fill', '#ffffff')
-      mask.append(visibleRectangle)
+      const visibleElement = createMaskElement(bounds, styles, context)
+      mask.append(visibleElement)
       svgContainer.append(mask)
       svgContainer.setAttribute('mask', `url(#${mask.id})`)
       childContext = {
@@ -182,9 +181,8 @@ export function handleElement(element: Element, context: Readonly<TraversalConte
       for (const { mask, forElement } of context.ancestorMasks) {
         if (element.offsetParent.contains(forElement) || element.offsetParent === forElement) {
           // Add a cutout to the ancestor mask
-          const visibleRectangle = createBox(bounds, context)
-          visibleRectangle.setAttribute('fill', '#ffffff')
-          mask.append(visibleRectangle)
+          const cutoutElement = createMaskElement(bounds, styles, context)
+          mask.append(cutoutElement)
         }
         else {
           break
@@ -380,6 +378,41 @@ function createBox(bounds: DOMRectReadOnly, context: Pick<TraversalContext, 'svg
   box.setAttribute('y', bounds.y.toString())
 
   return box
+}
+
+function createMaskElement(
+  bounds: DOMRectReadOnly,
+  styles: CSSStyleDeclaration,
+  context: Pick<TraversalContext, 'svgDocument'>,
+): SVGElement {
+  // Create a copy of styles that has no background or border, so we only get the border-radius effect
+  // This ensures we don't inherit background colors or border styles from the original element
+  const maskStyles = {
+    ...styles,
+    getPropertyValue: (property: string) => {
+      const value = styles.getPropertyValue(property)
+      // Only return border-radius related properties, clear others to avoid unwanted styles
+      if (property.startsWith('border-') && property.includes('-radius')) {
+        return value
+      }
+      // Clear background, border, and other visual properties for mask
+      if (property.startsWith('background') || property.startsWith('border') || property.startsWith('outline')) {
+        return ''
+      }
+      return value
+    },
+  } as CSSStyleDeclaration
+
+  // Reuse the existing border-radius calculation logic
+  const maskElement = createBackgroundAndBorderBox(bounds, maskStyles, context)
+
+  // Ensure the mask element is solid white (required for SVG masks)
+  maskElement.setAttribute('fill', '#ffffff')
+  // Remove any stroke that might have been added
+  maskElement.removeAttribute('stroke')
+  maskElement.removeAttribute('stroke-width')
+
+  return maskElement
 }
 
 function createBackgroundAndBorderBox(
