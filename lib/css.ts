@@ -11,7 +11,7 @@ export function isPositioned(styles: CSSStyleDeclaration): boolean {
 }
 
 export function isInFlow(styles: CSSStyleDeclaration): boolean {
-  return styles.float !== 'none' && styles.position !== 'absolute' && styles.position !== 'fixed'
+  return styles.float === 'none' && styles.position !== 'absolute' && styles.position !== 'fixed'
 }
 
 export function isTransparent(color: string): boolean {
