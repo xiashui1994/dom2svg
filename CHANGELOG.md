@@ -1,3 +1,13 @@
+## 1.0.12 - 2025-11-12
+
+### Bug Fixes
+
+* Fix overflow: hidden mask handling to support border-radius
+* Fix isInFlow logic for element flow detection
+* Improve border-radius support for individual corners
+* Fix text fill attribute handling to preserve existing SVG fills
+
+
 ## 1.0.11 - 2025-05-27
 
 ### Bug Fixes
