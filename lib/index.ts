@@ -36,28 +36,26 @@ export function elementToSVG(element: Element, options?: DomToSvgOptions): XMLDo
         if (!isCSSFontFaceRule(rule))
           continue
 
-        const styleSheetHref = rule.parentStyleSheet?.href
-        if (styleSheetHref) {
-          // Note: Firefox does not implement rule.style.src, need to use rule.style.getPropertyValue()
-          const parsedSourceValue = cssValueParser(rule.style.getPropertyValue('src'))
-          parsedSourceValue.walk((node) => {
-            if (node.type === 'function' && node.value === 'url' && node.nodes[0]) {
-              const urlArgumentNode = node.nodes[0]
-              if (urlArgumentNode.type === 'string' || urlArgumentNode.type === 'word') {
-                urlArgumentNode.value = new URL(
-                  unescapeStringValue(urlArgumentNode.value),
-                  styleSheetHref,
-                ).href
-              }
+        const styleSheetHref = rule.parentStyleSheet?.href || element.ownerDocument.location.href
+        // Note: Firefox does not implement rule.style.src, need to use rule.style.getPropertyValue()
+        const parsedSourceValue = cssValueParser(rule.style.getPropertyValue('src'))
+        parsedSourceValue.walk((node) => {
+          if (node.type === 'function' && node.value === 'url' && node.nodes[0]) {
+            const urlArgumentNode = node.nodes[0]
+            if (urlArgumentNode.type === 'string' || urlArgumentNode.type === 'word') {
+              urlArgumentNode.value = new URL(
+                unescapeStringValue(urlArgumentNode.value),
+                styleSheetHref,
+              ).href
             }
-          })
-          // Firefox does not support changing `src` on CSSFontFaceRule declarations, need to use PostCSS.
-          const updatedFontFaceRule = postcss.parse(rule.cssText)
-          updatedFontFaceRule.walkDecls('src', (declaration) => {
-            declaration.value = cssValueParser.stringify(parsedSourceValue.nodes)
-          })
-          styleElement.append(`${updatedFontFaceRule.toString()}\n`)
-        }
+          }
+        })
+        // Firefox does not support changing `src` on CSSFontFaceRule declarations, need to use PostCSS.
+        const updatedFontFaceRule = postcss.parse(rule.cssText)
+        updatedFontFaceRule.walkDecls('src', (declaration) => {
+          declaration.value = cssValueParser.stringify(parsedSourceValue.nodes)
+        })
+        styleElement.append(`${updatedFontFaceRule.toString()}\n`)
       }
     }
     catch (error) {

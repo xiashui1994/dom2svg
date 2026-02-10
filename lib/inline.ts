@@ -82,18 +82,22 @@ export async function inlineResources(element: Element, fetchOptions?: RequestIn
         try {
           const promises: Promise<void>[] = []
           // Walk the stylesheet and replace @font-face src URLs with data URIs
-          const parsedSheet = postcss.parse(element.textContent ?? '')
+          const textContent = element.textContent ?? ''
+          const parsedSheet = postcss.parse(textContent)
           parsedSheet.walkAtRules('font-face', (fontFaceRule) => {
             fontFaceRule.walkDecls('src', (sourceDeclaration) => {
               const parsedSourceValue = cssValueParser(sourceDeclaration.value)
+              const fontFetchPromises: Promise<void>[] = []
               parsedSourceValue.walk((node) => {
                 if (node.type === 'function' && node.value === 'url' && node.nodes[0]) {
                   const urlArgumentNode = node.nodes[0]
                   if (urlArgumentNode.type === 'string' || urlArgumentNode.type === 'word')
-                    promises.push(inlineCssFontUrlArgumentNode(urlArgumentNode))
+                    fontFetchPromises.push(inlineCssFontUrlArgumentNode(urlArgumentNode))
                 }
               })
-              sourceDeclaration.value = cssValueParser.stringify(parsedSourceValue.nodes)
+              promises.push(Promise.all(fontFetchPromises).then(() => {
+                sourceDeclaration.value = cssValueParser.stringify(parsedSourceValue.nodes)
+              }))
             })
           })
           await Promise.all(promises)
@@ -101,7 +105,7 @@ export async function inlineResources(element: Element, fetchOptions?: RequestIn
           element.textContent = parsedSheet.toString()
         }
         catch (error) {
-          console.error('Error inlining stylesheet', element.sheet, error)
+          console.error('Error inlining stylesheet', element, error)
         }
       }
     })().catch((error) => {

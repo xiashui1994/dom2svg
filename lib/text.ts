@@ -27,8 +27,10 @@ export function handleTextNode(textNode: Text, context: TraversalContext): void 
 
   const tabSize = Number.parseInt(styles.tabSize, 10)
 
-  // Make sure the y attribute is the bottom of the box, not the baseline
-  svgTextElement.setAttribute('dominant-baseline', 'text-after-edge')
+  // Use the default alphabetic baseline
+  svgTextElement.setAttribute('dominant-baseline', 'alphabetic')
+
+  const descent = getFontDescent(styles, textNode.ownerDocument)
 
   // Remove leading and trailing whitespace
   textNode.textContent = textNode.textContent!.trim()
@@ -71,7 +73,7 @@ export function handleTextNode(textNode: Text, context: TraversalContext): void 
       }
 
       textSpan.setAttribute('x', lineRectangle.x.toString())
-      textSpan.setAttribute('y', lineRectangle.bottom.toString()) // intentionally bottom because of dominant-baseline setting
+      textSpan.setAttribute('y', (lineRectangle.bottom - descent).toString())
       textSpan.setAttribute('textLength', lineRectangle.width.toString())
       textSpan.setAttribute('lengthAdjust', 'spacingAndGlyphs')
       svgTextElement.append(textSpan)
@@ -147,4 +149,28 @@ export function copyTextStyles(styles: CSSStyleDeclaration, svgElement: SVGEleme
     svgElement.setAttribute('fill', styles.color)
   // text-decoration
   svgElement.setAttribute('text-decoration', styles.textDecorationLine)
+}
+
+const fontMetricsCache = new Map<string, number>()
+let sharedCanvas: HTMLCanvasElement | null = null
+let sharedContext: CanvasRenderingContext2D | null = null
+
+function getFontDescent(styles: CSSStyleDeclaration, ownerDocument: Document): number {
+  const font = `${styles.fontStyle} ${styles.fontVariant} ${styles.fontWeight} ${styles.fontSize} ${styles.fontFamily}`
+  if (fontMetricsCache.has(font))
+    return fontMetricsCache.get(font)!
+
+  if (!sharedCanvas) {
+    sharedCanvas = ownerDocument.createElement('canvas')
+    sharedContext = sharedCanvas.getContext('2d')
+  }
+
+  if (!sharedContext)
+    return 0
+
+  sharedContext.font = font
+  const metrics = sharedContext.measureText('Xy')
+  const descent = metrics.fontBoundingBoxDescent ?? metrics.actualBoundingBoxDescent ?? 0
+  fontMetricsCache.set(font, descent)
+  return descent
 }
