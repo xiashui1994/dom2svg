@@ -1,3 +1,12 @@
+## 1.0.13 - 2026-02-10
+
+### Bug Fixes
+
+* Switch to alphabetic baseline with font metrics for precise text alignment
+* Optimize font metrics calculation using a singleton canvas and caching
+* Fix race condition in font inlining where CSS was stringified before fetches finished
+* Support @font-face rules in internal style sheets and improve URL resolution
+
 ## 1.0.12 - 2025-11-12
 
 ### Bug Fixes
